@@ -9,6 +9,9 @@ OBJECTS=$(subst .cpp,.o,$(SOURCES))
 
 run: test1 test2 test3
 
+demo: demo.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o demo	
+
 test1: TestRunner.o StudentTest1.o  $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
