@@ -17,44 +17,17 @@ namespace ariel
         string unit;
 
     public:
+        NumberWithUnits(){}
         //constructor
-        NumberWithUnits(double value, string unit) noexcept(false)
-        {
-            bool exist = false;
-            //checks if the given unit exist within the keys of the map
-            if (NumberWithUnits::convertionMap.count(unit))
-            {
-                exist = true;
-            }
-            //if the given unit doesn't exist within the units chart - throw an exception
-            if (exist == false)
-            {
-                throw invalid_argument(unit + " is Not a valid unit!");
-            }
+        NumberWithUnits(double value, string unit) noexcept(false);
 
-            else
-            {
-                this->value = value;
-                this->unit = unit;
-            }
-        }
         //copy constructor
-        NumberWithUnits(const NumberWithUnits &other)
-        {
-            this->value = other.value;
-            this->unit = other.unit;
-        }
+        NumberWithUnits(const NumberWithUnits &other);
 
-        double getValue()
-        {
-            return this->value;
-        }
+        double getValue(){return this->value;}
 
-        string getUnit()
-        {
-            return this->unit;
-        }
-        //API
+        string getUnit(){return this->unit;}
+        
         static void read_units(ifstream &fileName);
 
         /***************************Mathematical operators***************************/
@@ -85,15 +58,8 @@ namespace ariel
 
     private:
         static void convert(NumberWithUnits &, string unit);
-        void setValue(double v)
-        {
-            this->value = v;
-        }
-
-        void setUnit(string u)
-        {
-            this->unit = u;
-        }
+        void setValue(double v){this->value = v;}
+        void setUnit(string u){this->unit = u;}
     };
 
 }

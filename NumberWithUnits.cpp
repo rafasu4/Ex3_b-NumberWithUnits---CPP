@@ -7,6 +7,31 @@ namespace ariel
 {
     map<string, map<string, double>> NumberWithUnits::convertionMap = map<string, map<string, double>>();
 
+    NumberWithUnits::NumberWithUnits(double value, string unit) noexcept(false){
+        bool exist = false;
+            //checks if the given unit exist within the keys of the map
+            if (NumberWithUnits::convertionMap.count(unit))
+            {
+                exist = true;
+            }
+            //if the given unit doesn't exist within the units chart - throw an exception
+            if (exist == false)
+            {
+                throw invalid_argument(unit + " is Not a valid unit!");
+            }
+
+            else
+            {
+                this->value = value;
+                this->unit = unit;
+            }
+    }
+
+    NumberWithUnits::NumberWithUnits(const NumberWithUnits &other){
+        this->value = other.value;
+        this->unit = other.unit;
+    }
+
     void NumberWithUnits::read_units(ifstream &fileName)
     {
         if (fileName.fail())
@@ -211,24 +236,32 @@ namespace ariel
 
     istream &operator>>(istream &is, NumberWithUnits &n)
     {
-        char c = 0; //hold '[]'
-        string u; // holds the unit
-        double v = 0; // holds the value
-        is >> v >> c >> u >> c;
-        if (u[u.length() - 1] == ']')
-        {
-            u.pop_back();
+        char c = 0; 
+        string unitInput;
+        string valueInput;
+        double value = 0;
+        is.get(c);
+        //inserting the value of unit
+        while(c != '['){
+            valueInput += c;
+            is.get(c);
         }
-        if (c == '-')
-        {
-            is.putback('-');
+        is.get(c);
+        while(c != ']'){
+            //ignoring space
+            if(c != ' '){
+                unitInput += c;
+            }
+            is.get(c);
         }
-        //if the input unit doesn't exist in units file
-        if(!NumberWithUnits::convertionMap.count(u)){
-            throw invalid_argument(u + " is Not a valid unit!");
+        //check if the given unit is valid
+        if(!NumberWithUnits::convertionMap.count(unitInput)){
+            throw invalid_argument(unitInput + " is Not a valid unit!"); 
         }
-        n.setUnit(u);
-        n.setValue(v);
+        //convert to double
+        value = stod(valueInput);
+        n.setUnit(unitInput);
+        n.setValue(value);
         return is;
     }
 }
